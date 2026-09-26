@@ -1,4 +1,4 @@
-import { readFileSync, mkdirSync, copyFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, mkdirSync, copyFileSync, writeFileSync, readdirSync, existsSync, rmSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
@@ -6,6 +6,10 @@ const out = resolve(process.env.CALCULATOR_OUT_DIR || resolve(root, 'dist'));
 const publish = process.argv.includes('--publish-ready');
 const siteArg = process.env.CALCULATOR_SITE_URL;
 const sourceArg = process.env.CALCULATOR_SOURCE_URL;
+const allowed = new Set(['index.html','app.mjs','calculate.mjs','README.md','LICENSE','robots.txt','sitemap.xml','.nojekyll']);
+if (existsSync(out)) for (const entry of readdirSync(out, { withFileTypes:true })) {
+  if (!entry.isFile() || !allowed.has(entry.name)) throw new Error(`Unexpected output artifact: ${entry.name}`);
+}
 let metadata = '';
 let robots = 'User-agent: *\nDisallow: /\n';
 if (publish) {
@@ -21,6 +25,7 @@ if (publish) {
   writeFileSync(resolve(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${escape(site.href)}</loc></url></urlset>\n`);
 }
 mkdirSync(out, { recursive: true });
+if (!publish) rmSync(resolve(out, 'sitemap.xml'), { force: true });
 let html = readFileSync(resolve(root, 'index.html'), 'utf8').replace('<!-- release-metadata -->', metadata);
 if (publish) html = html.replace('noindex, follow', 'index, follow');
 writeFileSync(resolve(out, 'index.html'), html);

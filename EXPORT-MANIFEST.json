@@ -30,7 +30,7 @@
     },
     {
       "file": "scripts/build.mjs",
-      "sha256": "6076f69bef5cf30b94a991a5decc60daa8baf0f5b7de886fa8655f44b4aba12c"
+      "sha256": "ce4c685d4bcb220d1d33128fb3c84babdb374f44ba093e2cee16ac8113c1a505"
     },
     {
       "file": "tests/calculate.test.mjs",
