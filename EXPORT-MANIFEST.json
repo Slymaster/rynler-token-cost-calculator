@@ -1,0 +1,44 @@
+{
+  "files": [
+    {
+      "file": "index.html",
+      "sha256": "2d2ed9c29f5f6a6aa07f47ee104f024706a82e67191e11f0d9f55822bdb3b484"
+    },
+    {
+      "file": "app.mjs",
+      "sha256": "74d8f6cd955948c3d63aff03388d643a366e77ddbe003053aba4d18d9ea9d60f"
+    },
+    {
+      "file": "calculate.mjs",
+      "sha256": "7c2fd3c5fe5882c9383f6b0c57753e06fe49b44dfc2fee373ebbba711b47fd8f"
+    },
+    {
+      "file": "README.md",
+      "sha256": "0b5bb5b4f9555286dd1f15575989e3689aac1242aa4b01dae52f03f6532b0dd5"
+    },
+    {
+      "file": "LICENSE",
+      "sha256": "4f30a753e997cefaa0255534e756bb250b75cb80aa29adcf62155806da1bfa66"
+    },
+    {
+      "file": "package.json",
+      "sha256": "b4dac7e87d5200be7f2266a57c22fc6e141ee2aab2f8df357ac7d684df8f5277"
+    },
+    {
+      "file": ".gitignore",
+      "sha256": "58aea3d6b4b0f8799c1e00c3b023898516997f6369ee8e13d8d4b4215f70a62b"
+    },
+    {
+      "file": "scripts/build.mjs",
+      "sha256": "6076f69bef5cf30b94a991a5decc60daa8baf0f5b7de886fa8655f44b4aba12c"
+    },
+    {
+      "file": "tests/calculate.test.mjs",
+      "sha256": "02585513d077a9f38ea7e506a664f4e7b3111d60614133cf979d95ac5cf13779"
+    },
+    {
+      "file": ".github/workflows/pages.yml",
+      "sha256": "21379d97e4b40925e7cfaa0ea4eba0b874a221c4d238072fa40440168cce162f"
+    }
+  ]
+}
