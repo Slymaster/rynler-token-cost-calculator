@@ -51,3 +51,7 @@ This is Rynler's own tool, not an independent product evaluation. The test fixtu
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+## Evaluate an API before comparing its bill
+
+Read the [complete inference evaluation guide](evaluation/README.md) for request compatibility, workload acceptance, usage reconciliation and evidence boundaries. It contains no measured cross-provider results.

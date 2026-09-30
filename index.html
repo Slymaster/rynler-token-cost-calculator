@@ -1,4 +1,123 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LLM API token-cost calculator | Rynler</title><meta name="robots" content="noindex, follow"><!-- release-metadata --><meta name="description" content="Calculate a token bill from prices and token counts you supply. No hard-coded provider prices or rankings."><style>
 :root{font:16px system-ui,sans-serif;color:#e9e9e9;background:#101010}*{box-sizing:border-box}body{margin:0;padding:clamp(20px,5vw,60px)}main{max-width:800px;margin:auto}h1{font-size:clamp(32px,5vw,52px);line-height:1.1}p{line-height:1.65;color:#bcbcbc}a{color:#b8d4ff}form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:30px 0}label{font-size:14px;display:flex;flex-direction:column;gap:8px}input{width:100%;font:inherit;color:#fff;background:#1a1a1a;border:1px solid #555;border-radius:6px;padding:12px}input:focus{outline:2px solid #b8d4ff;outline-offset:2px}.result{border:1px solid #555;border-radius:8px;padding:25px;background:#191919}.result strong{display:block;font-size:36px;margin:5px 0}.note{font-size:13px}@media(max-width:600px){form{grid-template-columns:1fr}}
-</style></head><body><main><p>Rynler tool · arithmetic only</p><h1>Calculate your token bill</h1><p>Enter the rates from a current official price page and the token counts from your own workload. This tool does not provide provider prices or a ranking. Your inputs stay in this browser; no analytics or API calls are used.</p><form id="calc"><label>Input tokens<input name="inputTokens" type="number" min="0" step="1" required></label><label>Output tokens<input name="outputTokens" type="number" min="0" step="1" required></label><label>Input price in USD per million tokens<input name="inputRate" type="number" min="0" step="any" required></label><label>Output price in USD per million tokens<input name="outputRate" type="number" min="0" step="any" required></label></form><section class="result" aria-live="polite"><span>Estimated token cost in USD</span><strong id="total">Enter all fields</strong><span id="formula"></span></section><p class="note">Formula: input tokens × input rate / 1,000,000 + output tokens × output rate / 1,000,000. Taxes, provider fees, cache rules, minimum purchases, failures and retries are not included. Verify the actual bill in your provider's usage records.</p><p>For Rynler, read the <a href="https://rynler.com/pricing?src=p2-calculator">current pricing method</a> and <a href="https://rynler.com/api-reference">API reference</a>. Rynler publishes this tool and is not an independent evaluator.</p><noscript><p>The interactive calculator needs JavaScript. You can still use the formula above with your own token counts and current rates.</p></noscript><p class="note"><a href="./README.md">Method and source package</a> · Published by Rynler.</p></main><script type="module" src="./app.mjs"></script></body></html>
+.methodology{margin-top:60px;border-top:1px solid #555;padding-top:28px}.methodology h2{margin-top:2em}.methodology li{line-height:1.6;margin-bottom:10px}.method-table{overflow:auto}table{border-collapse:collapse;width:100%}td,th{border:1px solid #555;padding:12px;text-align:left}pre{overflow:auto;padding:18px;background:#1a1a1a}</style></head><body><main><p>Rynler tool · arithmetic only</p><h1>LLM API cost calculator: estimate the token bill before comparing providers</h1><p>Enter the rates from a current official price page and the token counts from your own workload. This tool does not provide provider prices or a ranking. Your inputs stay in this browser; no analytics or API calls are used.</p><form id="calc"><label>Input tokens<input name="inputTokens" type="number" min="0" step="1" required></label><label>Output tokens<input name="outputTokens" type="number" min="0" step="1" required></label><label>Input price in USD per million tokens<input name="inputRate" type="number" min="0" step="any" required></label><label>Output price in USD per million tokens<input name="outputRate" type="number" min="0" step="any" required></label></form><section class="result" aria-live="polite"><span>Estimated token cost in USD</span><strong id="total">Enter all fields</strong><span id="formula"></span></section><p class="note">Formula: input tokens × input rate / 1,000,000 + output tokens × output rate / 1,000,000. Taxes, provider fees, cache rules, minimum purchases, failures and retries are not included. Verify the actual bill in your provider's usage records.</p><p>For Rynler, read the <a href="https://rynler.com/pricing?src=p2-calculator">current pricing method</a> and <a href="https://rynler.com/api-reference">API reference</a>. Rynler publishes this tool and is not an independent evaluator.</p><noscript><p>The interactive calculator needs JavaScript. You can still use the formula above with your own token counts and current rates.</p></noscript><p class="note"><a href="./README.md">Method and source package</a> · Published by Rynler.</p><article class="methodology" aria-label="Calculation methodology"><p>Editorial provenance: this draft was generated with AI from a supplied research brief. Its publisher is responsible for reviewing the text before publication.</p>
+<p>Rynler publishes this calculator and the explanation below. We are an inference API vendor, not an independent evaluator. The tool accepts rates and token quantities supplied by the reader; it does not retrieve provider tariffs, recommend a model, or produce a cheapest-provider ranking.</p>
+<p>That boundary makes the calculator useful for a narrow question: given these token quantities and these input and output rates, what is the plain token charge? It also makes its limitations easy to inspect. A calculation can be correct while the final bill differs because the real request follows additional billing rules.</p>
+<h2>Methodology: supplied rates, observed usage, explicit exclusions</h2>
+<p>The editorial preparation date is September 30, 2026. This is not a provider-price audit date. The calculator has no vendor rate dataset to certify as current. For each estimate, record the date and official source of the rates you enter, the exact model and route, and whether the values describe ordinary input, cached input, ordinary output, or another billing unit.</p>
+<p>Use token quantities from the workload you intend to run. A word count is not a token count, and tokenization can differ between models. If you only have an estimate, label the quantity as estimated. If a completed request supplies usage records, preserve the service's interpretation of those records rather than relabeling them to fit an expected result.</p>
+<p>The calculator's <a href="https://github.com/Slymaster/rynler-token-cost-calculator">source and method package</a> is public and carries an MIT license. It exposes the arithmetic for inspection. The license covers that utility; it does not imply that the Rynler service or private product repository is open-source.</p>
+<p>The plain token formula uses the unit that the fields request:</p>
+<pre><code class="language-text">estimated token charge in USD =
+    input tokens × input USD rate per million tokens / 1,000,000
+  + output tokens × output USD rate per million tokens / 1,000,000
+</code></pre>
+<p>The denominator converts tokens to millions of tokens. It is a unit conversion, not an observed workload. There is no numeric scenario in this guide that pretends to be a recorded run. To compare another billing unit, first convert the rate into the unit the fields request and keep the original source beside the calculation.</p>
+<h2>Comparison table: what can be calculated and what needs more evidence</h2>
+<p>The following table is deliberately a calculation-scope table rather than a provider ranking. A ranked tariff comparison requires a dated model-specific dataset that this tool does not contain.</p>
+<div class="method-table"><table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Plain input/output calculator</th>
+<th>Evidence still required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ordinary input token charge</td>
+<td>Estimated from your input quantity and rate</td>
+<td>Current official rate and applicable model</td>
+</tr>
+<tr>
+<td>Ordinary output token charge</td>
+<td>Estimated from your output quantity and rate</td>
+<td>Current official rate and reported usage</td>
+</tr>
+<tr>
+<td>Cached input</td>
+<td>No separate cache field</td>
+<td>Cache hit and write rules plus eligible usage</td>
+</tr>
+<tr>
+<td>Batch discount</td>
+<td>No automatic discount</td>
+<td>Eligible endpoint, discount terms, and execution mode</td>
+</tr>
+<tr>
+<td>Platform fees</td>
+<td>Not automatically included</td>
+<td>Actual fee basis and transaction records</td>
+</tr>
+<tr>
+<td>Minimum purchase</td>
+<td>Not treated as request usage</td>
+<td>Account funding requirement and remaining balance</td>
+</tr>
+<tr>
+<td>Failed requests and retries</td>
+<td>Not forecast</td>
+<td>Outcomes, retry behavior, and usage settlement</td>
+</tr>
+<tr>
+<td>Taxes and currency conversion</td>
+<td>Not included</td>
+<td>Applicable account records and billing currency</td>
+</tr>
+<tr>
+<td>Latency and answer quality</td>
+<td>Not measured</td>
+<td>Timed requests and declared acceptance criteria</td>
+</tr>
+</tbody>
+</table></div>
+<p>An omitted category is not free. It is outside the estimate. Adding a zero to an unverified fee field would make a price claim, so absent data should stay absent. If the service bills another resource, such as execution time, compare it with a method that actually represents that resource.</p>
+<h3>Lowest cost for high volume</h3>
+<p>A high-volume application needs a view of its request mix, not just a single model rate. Keep short and long outputs visible, identify repeated context, and record which requests qualify for a different billing mode. Separate the token charge from the operational effect of throttling and retries.</p>
+<p>Where the same prefix appears repeatedly, actual cache behavior can change the result. Do not apply a cache-read rate to every input token merely because prompts look similar. Check eligibility and the usage record. If the provider does not expose a verifiable split, state that the cache contribution remains unknown.</p>
+<p>After a controlled run, reconcile aggregate usage against the account record. This catches the difference between a sample-based forecast and the traffic that actually reached the provider. Volume amplifies a mistaken assumption as effectively as it amplifies a saving.</p>
+<h3>Lowest cost for low latency</h3>
+<p>This calculator does not measure latency. A low price cannot establish a fast response, and an attractive average cannot establish the application's worst acceptable behavior. Define the latency requirement separately, then evaluate the cost of requests that satisfy it.</p>
+<p>Choose a timing boundary that matches the product. For an interactive interface, time to usable content may matter; for a background task, total completion time may be the relevant measure. Buffered event delivery and native incremental output answer different interface requirements. Record what the application receives rather than inferring it from a streaming parameter.</p>
+<p>When a candidate fails the latency requirement, decide whether a queue or an asynchronous flow is acceptable. If it is not, reject the candidate. A nominal token saving cannot compensate for failing a hard user-facing requirement.</p>
+<h3>Lowest cost for long context</h3>
+<p>A model's advertised context does not necessarily equal the request allowance of the API route you use. Verify both the model and endpoint limits before estimating a large-context workload. Include the expected output alongside the input when the service's limit accounts for both.</p>
+<p>If the application can summarize or retrieve a smaller context, evaluate that as a separate pipeline. Include the cost of the extra model requests and the effect on answer quality. Do not compare a reduced-context pipeline against a full-context request while presenting them as identical workloads.</p>
+<p>The correct comparison is the total cost of a task that meets the declared requirements. The calculator helps with the token component of that analysis, but it cannot validate the pipeline or the endpoint's practical context behavior.</p>
+<h2>Hidden costs: the questions the input fields cannot answer</h2>
+<h3>Rate limits and retries</h3>
+<p>A request limit can force an application to queue work, lower concurrency, or retry. Preserve those outcomes when evaluating a service. Count accepted tasks separately from submitted attempts so that failed or repeated work does not disappear from the denominator.</p>
+<p>Before retrying an uncertain result, inspect the provider's recovery procedure and usage record. A timeout in the client is not proof that the server did no work. Likewise, a rejected request is not automatically billed. The result depends on the service's rules and the specific observed outcome.</p>
+<h3>Cache misses and cache writes</h3>
+<p>Cache reads, cache writes, and ordinary input are distinct categories when a provider bills them separately. Record what the published rate means. A promotional cache-read figure is not a replacement for the rate charged to uncached input.</p>
+<p>If your intended workload is not yet measured, calculate scenarios from explicit assumptions and label them as scenarios. This guide does not supply an assumed hit rate. Treating an imagined percentage as a measured behavior would turn an arithmetic utility into misleading evidence.</p>
+<h3>Funding, fees, and unused credits</h3>
+<p>Account funding and task cost belong in separate columns. A required credit purchase can affect the initial cash commitment while leaving a balance for future requests. The unused balance is neither a completed task charge nor automatically recoverable cash.</p>
+<p>A platform fee may apply to the purchase, the usage, or another transaction. Use the documented fee basis rather than multiplying every token rate by a percentage taken from a different service. Include currency and any applicable taxes in the account reconciliation, even when a public rate table uses another currency.</p>
+<h3>Processing and operational terms</h3>
+<p>An API can fit a price target and still fail the application's processing requirements. Inspect the data terms, region claims, required retention behavior, and service dependencies before sending confidential content. This utility does not certify compliance or a processing region.</p>
+<p>Similarly, a successful arithmetic check does not establish service availability. Test the actual request path with permissioned input, preserve failures, and keep the existing route available until the application passes its acceptance checks.</p>
+<h2>Where Rynler belongs in the calculation</h2>
+<p>Rynler should be evaluated with the same method as every other candidate. Its own publisher does not get to turn the calculator into an automatic recommendation. Start with the selected model's current commercial terms and your workload's input and output quantities, then compare the estimate with settled usage after a test.</p>
+<p>The public <a href="https://rynler.com/pricing?src=p2-calculator&amp;utm_source=githubpages&amp;utm_medium=parasite&amp;utm_campaign=p2-calculator">pricing method</a> supplies the product context. This guide does not reproduce a numeric tariff from an incomplete source dataset or promise a free trial. A live pricing page, an account balance, and an actual charge prove different things.</p>
+<p>For an OpenAI SDK application, inspect the documented supported request fields before assuming migration is a configuration-only change. A familiar SDK can help preserve message serialization; it does not establish equivalent model behavior, tools, or streaming semantics.</p>
+<h2>Interactive calculator</h2>
+<p>Before comparing estimates, keep a calculation record outside the interactive fields. Give it the workload name, the source date, the selected model, the meaning of each usage category, and the reason the candidate passed the feature check. That record is what makes another person's calculation comparable to yours. A screenshot of a total without the supplied rates and assumptions does not establish the result's scope.</p>
+<p>When the tariff changes, preserve the previous record and make a new calculation. Do not silently overwrite a historical estimate and describe the updated number as what an earlier request cost. This distinction is useful for budgeting as well as publication: a forecast describes a future scenario, while a settled usage record describes an observed transaction.</p>
+<p>Open the existing <a href="https://slymaster.github.io/rynler-token-cost-calculator/">LLM API token-cost calculator</a> and enter the input quantity, output quantity, input rate, and output rate. Keep the official tariff snapshot beside the estimate. If any required value is unknown, collect it before drawing a conclusion rather than filling the field with an arbitrary number.</p>
+<p>The live utility states that its inputs stay in the browser and that it uses no analytics or API calls. The calculator cannot observe your provider account, reconcile an invoice, or validate that the selected rate applies. Those checks remain with the person supplying the inputs.</p>
+<p>For comparison, calculate each eligible candidate with the same workload assumptions and store the date of every source. If model versions or endpoint features differ, state the difference alongside the estimate. Then run the application acceptance test: arithmetic alone cannot choose a provider.</p>
+<h2>FAQ</h2>
+<h3>Is there a free LLM API?</h3>
+<p>A provider may offer an eligible free model, limited credits, or an introductory allocation. These are different offers with different conditions. Check the current account terms and model eligibility; this calculator does not certify an enduring free tier.</p>
+<h3>What is the cheapest GPT-class model?</h3>
+<p>“GPT-class” does not define an acceptance test. Choose the features and answer quality your application needs, then compare eligible models using actual usage. This utility does not rank models or assert that distinct models have equivalent quality.</p>
+<h3>Can I enter cached input in the ordinary input field?</h3>
+<p>Only if the quantity and rate you enter actually represent the same billing category. A workload mixing cached and uncached input needs the categories calculated separately. Do not apply a cache rate to the entire input without evidence.</p>
+<h3>Is this an invoice estimator?</h3>
+<p>It estimates the plain token charge from supplied values. Fees, taxes, cache rules, minimum purchases, failed requests, and retries require additional information. Reconcile against the provider's usage and billing record before calling the estimate the final bill.</p>
+<h3>Does the calculator prove that Rynler is cheaper?</h3>
+<p>No. It is published by Rynler and performs arithmetic on the reader's inputs. A comparative claim requires current applicable rates, comparable workloads, and the result of the application test.</p>
+<h2>Reproduce the calculation on your own workload</h2>
+<p><strong>Inspect <a href="https://rynler.com/docs?src=p2-calculator&amp;utm_source=githubpages&amp;utm_medium=parasite&amp;utm_campaign=p2-calculator">Rynler's documented integration</a>, record a supported workload's usage, and compare that usage with your saved tariff source.</strong> Preserve the difference between a calculated token estimate and the charge actually settled.</p></article></main><script type="module" src="./app.mjs"></script></body></html>
