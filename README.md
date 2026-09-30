@@ -54,4 +54,4 @@ MIT. See [LICENSE](LICENSE).
 
 ## Evaluate an API before comparing its bill
 
-Read the [complete inference evaluation guide](evaluation/README.md) for request compatibility, workload acceptance, usage reconciliation and evidence boundaries. It contains no measured cross-provider results.
+Read the [complete inference evaluation guide](https://github.com/Slymaster/rynler-token-cost-calculator/tree/main/evaluation) for request compatibility, workload acceptance, usage reconciliation and evidence boundaries. It contains no measured cross-provider results.
