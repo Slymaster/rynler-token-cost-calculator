@@ -1,0 +1,30 @@
+{
+  "note": "Comparison pages (T1). Each pair: a/b must exist in content/prices.json ids. Slug becomes /compare/{slug}.html",
+  "pairs": [
+    { "a": "anthropic/claude-opus-5", "b": "openai/gpt-4.1", "slug": "claude-opus-5-vs-gpt-4.1-cost" },
+    { "a": "anthropic/claude-sonnet-4.6", "b": "openai/gpt-4o", "slug": "claude-sonnet-4.6-vs-gpt-4o-cost" },
+    { "a": "anthropic/claude-haiku-5.5", "b": "openai/gpt-4o-mini", "slug": "claude-haiku-5.5-vs-gpt-4o-mini-cost" },
+    { "a": "anthropic/claude-opus-5", "b": "google/gemini-2.5-pro", "slug": "claude-opus-5-vs-gemini-2.5-pro-cost" },
+    { "a": "anthropic/claude-sonnet-4.6", "b": "google/gemini-2.5-pro", "slug": "claude-sonnet-4.6-vs-gemini-2.5-pro-cost" },
+    { "a": "anthropic/claude-haiku-5.5", "b": "google/gemini-2.5-flash", "slug": "claude-haiku-5.5-vs-gemini-2.5-flash-cost" },
+    { "a": "anthropic/claude-opus-5", "b": "anthropic/claude-sonnet-4.6", "slug": "claude-opus-5-vs-sonnet-4.6-cost" },
+    { "a": "anthropic/claude-opus-4.8", "b": "anthropic/claude-opus-5", "slug": "claude-opus-4.8-vs-opus-5-cost" },
+    { "a": "anthropic/claude-sonnet-4.5", "b": "anthropic/claude-sonnet-4.6", "slug": "claude-sonnet-4.5-vs-4.6-cost" },
+    { "a": "anthropic/claude-fable-5.1", "b": "anthropic/claude-fable-5", "slug": "claude-fable-5.1-vs-fable-5-cost" },
+    { "a": "anthropic/claude-fable-5", "b": "anthropic/claude-opus-5", "slug": "claude-fable-5-vs-opus-5-cost" },
+    { "a": "anthropic/claude-opus-5", "b": "deepseek/deepseek-v4-pro", "slug": "claude-opus-5-vs-deepseek-v4-pro-cost" },
+    { "a": "deepseek/deepseek-chat-v3.1", "b": "openai/gpt-4.1", "slug": "deepseek-v3.1-vs-gpt-4.1-cost" },
+    { "a": "deepseek/deepseek-v4-flash", "b": "google/gemini-2.5-flash", "slug": "deepseek-v4-flash-vs-gemini-2.5-flash-cost" },
+    { "a": "x-ai/grok-4.7", "b": "openai/gpt-4.1", "slug": "grok-4.7-vs-gpt-4.1-cost" },
+    { "a": "x-ai/grok-4.7", "b": "anthropic/claude-sonnet-4.6", "slug": "grok-4.7-vs-claude-sonnet-4.6-cost" },
+    { "a": "mistralai/mistral-large-4-0", "b": "openai/gpt-4.1", "slug": "mistral-large-4-vs-gpt-4.1-cost" },
+    { "a": "mistralai/codestral-2508", "b": "openai/gpt-4.1", "slug": "codestral-vs-gpt-4.1-cost" },
+    { "a": "anthropic/claude-sonnet-4.6", "b": "mistralai/codestral-2508", "slug": "claude-sonnet-4.6-vs-codestral-cost" },
+    { "a": "meta-llama/llama-4-maverick", "b": "openai/gpt-4o", "slug": "llama-4-maverick-vs-gpt-4o-cost" },
+    { "a": "meta-llama/llama-3.3-70b-instruct", "b": "deepseek/deepseek-chat-v3.1", "slug": "llama-3.3-70b-vs-deepseek-v3.1-cost" },
+    { "a": "qwen/qwen3-235b-a22b", "b": "deepseek/deepseek-v4-pro", "slug": "qwen3-235b-vs-deepseek-v4-pro-cost" },
+    { "a": "amazon/nova-premier-v1", "b": "openai/gpt-4.1", "slug": "nova-premier-vs-gpt-4.1-cost" },
+    { "a": "google/gemini-3-flash-preview", "b": "openai/gpt-4o-mini", "slug": "gemini-3-flash-vs-gpt-4o-mini-cost" },
+    { "a": "google/gemini-2.5-pro", "b": "openai/gpt-4.1", "slug": "gemini-2.5-pro-vs-gpt-4.1-cost" }
+  ]
+}
