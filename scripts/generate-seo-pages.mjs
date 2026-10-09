@@ -59,6 +59,11 @@ const calculatorForm = (m, d = {}) => {
   <label>Output rate USD / 1M tokens<input type="number" min="0" step="any" value="${m.output_per_1m}" oninput="seoCalc(this.form)"></label>
 </form>
 <div class="result" aria-live="polite"><span>Estimated token cost in USD</span><strong class="total">—</strong><span class="formula"></span></div>
+<div class="result" style="border-color:#b8d4ff">
+<span><strong style="font-size:18px">Run this on real traffic</strong></span>
+<p style="margin:8px 0 12px">Rynler is an inference API with hard budget caps and per-token metering you can audit line by line. Free credits on signup — pay for tokens, not seats.</p>
+<p style="margin:0"><a href="https://rynler.com/pricing?src=p3-seo-cta" style="background:#b8d4ff;color:#101010;padding:10px 18px;border-radius:6px;text-decoration:none;font-weight:600">Get an API key</a> &nbsp; <a href="https://rynler.com/api-reference?src=p3-seo-cta">Read the API reference →</a></p>
+</div>
 <script>
 function seoCalc(f){const ins=parseFloat(f.querySelectorAll('input')[0].value)||0, outs=parseFloat(f.querySelectorAll('input')[1].value)||0;
 const ri=parseFloat(f.querySelectorAll('input')[2].value)||0, ro=parseFloat(f.querySelectorAll('input')[3].value)||0;
