@@ -11,6 +11,10 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const out = resolve(process.env.SEO_OUT_DIR || resolve(root, 'dist'));
 const site = (process.env.CALCULATOR_SITE_URL || 'https://rynler.com/').replace(/\/?$/, '/');
+// Duplicate-content policy: pricing, calculators and their hubs are owned by
+// rynler.com — island copies carry a cross-domain canonical. Comparisons and
+// articles have no rynler.com twin and stay self-canonical here.
+const canon = 'https://rynler.com';
 
 const prices = JSON.parse(readFileSync(resolve(root, 'content/prices.json'), 'utf8'));
 const pairs = JSON.parse(readFileSync(resolve(root, 'content/compare-pairs.json'), 'utf8'));
@@ -109,7 +113,7 @@ ${compLinks}
   return page({
     title: `${name} Pricing ${year}: $${money(m.input_per_1m)} / 1M Input Tokens`,
     description: `${name} API pricing per 1M tokens: $${money(m.input_per_1m)} input, $${money(m.output_per_1m)} output. Live cost calculator and worked examples.`,
-    canonical: `${site}models/${m.model}-pricing`,
+    canonical: `${canon}/models/${encodeURIComponent(m.id)}`,
     crumbs: `<a href="${site}">Rynler</a> › <a href="${site}models/">Models</a> › ${esc(name)}`,
     body,
     ld: faqLd([
@@ -196,7 +200,7 @@ ${calculatorForm(m, { inTok: s.inTok, outTok: s.outTok })}
   return page({
     title: s.title,
     description: `${s.title.split(':')[0]}: estimate per-run and monthly LLM token costs from real rates. Interactive calculator, formula, and worked numbers.`,
-    canonical: `${site}calculators/${s.slug}`,
+    canonical: `${canon}/calculators/${s.slug}`,
     crumbs: `<a href="${site}">Rynler</a> › <a href="${site}calculators/">Calculators</a> › ${esc(s.title.split(':')[0])}`,
     body,
     ld: faqLd([
@@ -282,7 +286,6 @@ mkdirSync(resolve(out, 'blog'), { recursive: true });
 
 for (const m of prices.models) {
   writeFileSync(resolve(out, 'models', `${m.model}-pricing.html`), modelPage(m));
-  urls.push(`${site}models/${m.model}-pricing`);
 }
 let nCompare = 0;
 for (const p of pairs.pairs) {
@@ -297,7 +300,6 @@ for (const s of scenarios.scenarios) {
   const html = scenarioPage(s);
   if (!html) continue;
   writeFileSync(resolve(out, 'calculators', `${s.slug}.html`), html);
-  urls.push(`${site}calculators/${s.slug}`);
   nScen++;
 }
 const articleFiles = readdirSync(resolve(root, 'content/articles')).filter((f) => f.endsWith('.md'));
@@ -311,10 +313,10 @@ writeFileSync(resolve(out, 'models', 'index.html'), hubPage({
   heading: `LLM Model Pricing List (${year}) — ${prices.models.length} Models`,
   intro: 'Every model price on this site: input and output rates per million tokens, each with a live calculator. Compiled from public provider documentation.',
   items: prices.models.map((m) => `<li><a href="${site}models/${m.model}-pricing.html">${esc(displayName(m))}</a> — $${money(m.input_per_1m)} in / $${money(m.output_per_1m)} out per 1M</li>`),
-  canonical: `${site}models/`,
+  canonical: `${canon}/models`,
   crumbs: `<a href="${site}">Rynler</a> › Models`,
 }));
-urls.push(`${site}models/`);
+// models hub: canonical -> rynler.com, excluded from the island sitemap
 
 writeFileSync(resolve(out, 'compare', 'index.html'), hubPage({
   heading: `LLM Cost Comparisons (${year})`,
@@ -332,10 +334,10 @@ writeFileSync(resolve(out, 'calculators', 'index.html'), hubPage({
   heading: `LLM Cost Calculators (${year})`,
   intro: 'Per-use-case cost calculators: coding agents, chat bots, RAG pipelines, monthly budgets. Every page re-rates to your own numbers.',
   items: scenarios.scenarios.map((s) => `<li><a href="${site}calculators/${s.slug}.html">${esc(s.title.split(':')[0])}</a></li>`),
-  canonical: `${site}calculators/`,
+  canonical: `${canon}/calculators`,
   crumbs: `<a href="${site}">Rynler</a> › Calculators`,
 }));
-urls.push(`${site}calculators/`);
+// calculators hub: canonical -> rynler.com, excluded from the island sitemap
 
 writeFileSync(resolve(out, 'blog', 'index.html'), hubPage({
   heading: 'LLM Cost Engineering Blog',
