@@ -20,6 +20,9 @@ const prices = JSON.parse(readFileSync(resolve(root, 'content/prices.json'), 'ut
 const pairs = JSON.parse(readFileSync(resolve(root, 'content/compare-pairs.json'), 'utf8'));
 const scenarios = JSON.parse(readFileSync(resolve(root, 'content/calculator-scenarios.json'), 'utf8'));
 const byId = new Map(prices.models.map((m) => [m.id, m]));
+// Only models present in the rynler.com catalogue may carry a cross-domain
+// canonical: a canonical pointing at a 404 consolidates nothing.
+const rynlerIds = new Set(JSON.parse(readFileSync(resolve(root, 'content/rynler-catalogue-ids.json'), 'utf8')));
 
 const esc = (t) => String(t).replace(/[<>&"']/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' }[c]));
 const money = (n) => (n >= 100 ? n.toFixed(2) : n >= 1 ? n.toFixed(2) : n.toFixed(3));
@@ -113,7 +116,7 @@ ${compLinks}
   return page({
     title: `${name} Pricing ${year}: $${money(m.input_per_1m)} / 1M Input Tokens`,
     description: `${name} API pricing per 1M tokens: $${money(m.input_per_1m)} input, $${money(m.output_per_1m)} output. Live cost calculator and worked examples.`,
-    canonical: `${canon}/models/${encodeURIComponent(m.id)}`,
+    canonical: rynlerIds.has(m.id) ? `${canon}/models/${encodeURIComponent(m.id)}` : `${site}models/${m.model}-pricing`,
     crumbs: `<a href="${site}">Rynler</a> › <a href="${site}models/">Models</a> › ${esc(name)}`,
     body,
     ld: faqLd([
