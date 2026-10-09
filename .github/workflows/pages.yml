@@ -20,6 +20,7 @@ jobs:
         run: |
           node --test tests/*.test.mjs
           node scripts/build.mjs --publish-ready
+          node scripts/generate-seo-pages.mjs
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist
