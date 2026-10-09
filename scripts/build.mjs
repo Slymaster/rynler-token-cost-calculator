@@ -7,9 +7,12 @@ const publish = process.argv.includes('--publish-ready');
 const siteArg = process.env.CALCULATOR_SITE_URL;
 const sourceArg = process.env.CALCULATOR_SOURCE_URL;
 const allowed = new Set(['index.html','app.mjs','calculate.mjs','README.md','LICENSE','robots.txt','sitemap.xml','.nojekyll']);
-const allowedDirs = new Set(['models', 'compare']);
+const allowedDirs = new Set(['models', 'compare', 'calculators', 'blog']);
+const indexnowKey = (() => { try { return readFileSync(resolve(root, 'content/indexnow-key.txt'), 'utf8').trim() + '.txt'; } catch { return null; } })();
+const allowedExtra = new Set(['sitemap-seo.xml', ...(indexnowKey ? [indexnowKey] : [])]);
 if (existsSync(out)) for (const entry of readdirSync(out, { withFileTypes:true })) {
   if (entry.isDirectory() && allowedDirs.has(entry.name)) continue;
+  if (entry.isFile() && allowedExtra.has(entry.name)) continue;
   if (!entry.isFile() || !allowed.has(entry.name)) throw new Error(`Unexpected output artifact: ${entry.name}`);
 }
 let metadata = '';
