@@ -17,12 +17,13 @@ const byId = new Map(prices.models.map((m) => [m.id, m]));
 
 const esc = (t) => String(t).replace(/[<>&"']/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' }[c]));
 const money = (n) => (n >= 100 ? n.toFixed(2) : n >= 1 ? n.toFixed(2) : n.toFixed(3));
+const providerName = (p) => ({ 'x-ai': 'xAI', 'meta-llama': 'Meta', 'mistralai': 'Mistral', 'z-ai': 'Z AI', 'moonshotai': 'Moonshot AI', 'qwen': 'Qwen', 'deepseek': 'DeepSeek', 'openai': 'OpenAI', 'anthropic': 'Anthropic', 'google': 'Google', 'cohere': 'Cohere', 'amazon': 'Amazon', 'microsoft': 'Microsoft' }[p] || p);
 const displayName = (m) => {
-  const acronyms = { gpt: 'GPT', api: 'API', llm: 'LLM', nemo: 'Nemo', saba: 'Saba', instruct: 'Instruct', turbo: 'Turbo' };
+  const acronyms = { gpt: 'GPT', api: 'API', llm: 'LLM', nemo: 'Nemo', saba: 'Saba', instruct: 'Instruct', turbo: 'Turbo', deepseek: 'DeepSeek', qwen: 'Qwen', mistral: 'Mistral', llama: 'Llama', nova: 'Nova', grok: 'Grok', gemini: 'Gemini' };
   const pretty = m.model.split('-').map((w) => (/^\d/.test(w) ? w : acronyms[w.toLowerCase()] || w.charAt(0).toUpperCase() + w.slice(1))).join(' ');
-  return `${providerName(m.provider)} ${pretty}`;
+  const brand = providerName(m.provider);
+  return pretty.toLowerCase().startsWith(brand.toLowerCase()) ? pretty : `${brand} ${pretty}`;
 };
-const providerName = (p) => ({ 'x-ai': 'xAI', 'meta-llama': 'Meta Llama', 'mistralai': 'Mistral AI', 'z-ai': 'Z AI', 'moonshotai': 'Moonshot AI', 'qwen': 'Qwen', 'deepseek': 'DeepSeek', 'openai': 'OpenAI', 'anthropic': 'Anthropic', 'google': 'Google', 'cohere': 'Cohere', 'amazon': 'Amazon', 'microsoft': 'Microsoft' }[p] || p);
 const year = new Date().getFullYear();
 
 const BASE_CSS = `:root{font:16px system-ui,sans-serif;color:#e9e9e9;background:#101010}*{box-sizing:border-box}body{margin:0;padding:clamp(20px,5vw,60px)}main{max-width:860px;margin:auto}h1{font-size:clamp(28px,4.5vw,44px);line-height:1.15}h2{margin-top:2.2em}p,li{line-height:1.65;color:#bcbcbc}a{color:#b8d4ff}nav.crumbs{font-size:13px;color:#888}table{border-collapse:collapse;width:100%;margin:18px 0}td,th{border:1px solid #555;padding:11px 12px;text-align:left}th{background:#1a1a1a}form.calc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:26px 0}label{font-size:14px;display:flex;flex-direction:column;gap:8px}input{width:100%;font:inherit;color:#fff;background:#1a1a1a;border:1px solid #555;border-radius:6px;padding:11px}input:focus{outline:2px solid #b8d4ff;outline-offset:2px}.result{border:1px solid #555;border-radius:8px;padding:22px;background:#191919;margin:18px 0}.result strong{display:block;font-size:32px;margin:5px 0}.note{font-size:13px;color:#999}footer{margin-top:70px;border-top:1px solid #555;padding-top:24px;font-size:14px}@media(max-width:600px){form.calc{grid-template-columns:1fr}}`;
